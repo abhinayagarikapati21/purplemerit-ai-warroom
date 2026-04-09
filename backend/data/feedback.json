@@ -1,0 +1,242 @@
+[
+    {
+        "id": "fb_post_9",
+        "timestamp": "2026-04-07T18:11:18.229062",
+        "content": "Terrible update, latency is so high on the checkout page.",
+        "rating": 1
+    },
+    {
+        "id": "fb_pre_3",
+        "timestamp": "2026-03-31T18:11:18.228825",
+        "content": "It's okay, took a minute to find the new buttons.",
+        "rating": 3
+    },
+    {
+        "id": "fb_post_8",
+        "timestamp": "2026-04-08T18:11:18.229047",
+        "content": "Terrible update, latency is so high on the checkout page.",
+        "rating": 1
+    },
+    {
+        "id": "fb_post_7",
+        "timestamp": "2026-04-06T18:11:18.229007",
+        "content": "App crashed when I tried to pay!",
+        "rating": 2
+    },
+    {
+        "id": "fb_post_3",
+        "timestamp": "2026-04-09T18:11:18.228979",
+        "content": "Payment keeps hanging on the loading screen.",
+        "rating": 2
+    },
+    {
+        "id": "fb_pre_2",
+        "timestamp": "2026-04-02T18:11:18.228813",
+        "content": "Smooth experience.",
+        "rating": 4
+    },
+    {
+        "id": "fb_post_19",
+        "timestamp": "2026-04-08T18:11:18.229143",
+        "content": "Terrible update, latency is so high on the checkout page.",
+        "rating": 2
+    },
+    {
+        "id": "fb_post_24",
+        "timestamp": "2026-04-07T18:11:18.229181",
+        "content": "Payment keeps hanging on the loading screen.",
+        "rating": 2
+    },
+    {
+        "id": "fb_pre_12",
+        "timestamp": "2026-03-28T18:11:18.228894",
+        "content": "Nothing special, works fine.",
+        "rating": 4
+    },
+    {
+        "id": "fb_post_21",
+        "timestamp": "2026-04-07T18:11:18.229158",
+        "content": "App crashed when I tried to pay!",
+        "rating": 1
+    },
+    {
+        "id": "fb_post_12",
+        "timestamp": "2026-04-09T18:11:18.229083",
+        "content": "It says my card failed but it worked yesterday.",
+        "rating": 2
+    },
+    {
+        "id": "fb_post_5",
+        "timestamp": "2026-04-09T18:11:18.228992",
+        "content": "App crashed when I tried to pay!",
+        "rating": 2
+    },
+    {
+        "id": "fb_post_0",
+        "timestamp": "2026-04-06T18:11:18.228916",
+        "content": "It says my card failed but it worked yesterday.",
+        "rating": 2
+    },
+    {
+        "id": "fb_post_1",
+        "timestamp": "2026-04-09T18:11:18.228961",
+        "content": "Terrible update, latency is so high on the checkout page.",
+        "rating": 2
+    },
+    {
+        "id": "fb_post_18",
+        "timestamp": "2026-04-09T18:11:18.229134",
+        "content": "Why did you change it? The old way actually worked.",
+        "rating": 2
+    },
+    {
+        "id": "fb_pre_0",
+        "timestamp": "2026-03-31T18:11:18.228483",
+        "content": "Much faster than before, great job.",
+        "rating": 4
+    },
+    {
+        "id": "fb_pre_5",
+        "timestamp": "2026-04-03T18:11:18.228845",
+        "content": "I didn't notice much difference.",
+        "rating": 4
+    },
+    {
+        "id": "fb_post_15",
+        "timestamp": "2026-04-08T18:11:18.229106",
+        "content": "Payment keeps hanging on the loading screen.",
+        "rating": 1
+    },
+    {
+        "id": "fb_pre_9",
+        "timestamp": "2026-03-27T18:11:18.228872",
+        "content": "Love the new design!",
+        "rating": 4
+    },
+    {
+        "id": "fb_post_2",
+        "timestamp": "2026-04-05T18:11:18.228972",
+        "content": "Payment keeps hanging on the loading screen.",
+        "rating": 2
+    },
+    {
+        "id": "fb_post_23",
+        "timestamp": "2026-04-07T18:11:18.229173",
+        "content": "It says my card failed but it worked yesterday.",
+        "rating": 1
+    },
+    {
+        "id": "fb_pre_6",
+        "timestamp": "2026-03-31T18:11:18.228852",
+        "content": "It's okay, took a minute to find the new buttons.",
+        "rating": 4
+    },
+    {
+        "id": "fb_pre_8",
+        "timestamp": "2026-03-29T18:11:18.228864",
+        "content": "Nothing special, works fine.",
+        "rating": 3
+    },
+    {
+        "id": "fb_post_14",
+        "timestamp": "2026-04-05T18:11:18.229098",
+        "content": "App crashed when I tried to pay!",
+        "rating": 2
+    },
+    {
+        "id": "fb_post_4",
+        "timestamp": "2026-04-09T18:11:18.228986",
+        "content": "Terrible update, latency is so high on the checkout page.",
+        "rating": 1
+    },
+    {
+        "id": "fb_pre_1",
+        "timestamp": "2026-04-02T18:11:18.228793",
+        "content": "Love the new design!",
+        "rating": 4
+    },
+    {
+        "id": "fb_pre_13",
+        "timestamp": "2026-04-02T18:11:18.228902",
+        "content": "Looks very modern.",
+        "rating": 3
+    },
+    {
+        "id": "fb_post_6",
+        "timestamp": "2026-04-08T18:11:18.229001",
+        "content": "It says my card failed but it worked yesterday.",
+        "rating": 1
+    },
+    {
+        "id": "fb_pre_7",
+        "timestamp": "2026-04-01T18:11:18.228858",
+        "content": "Nothing special, works fine.",
+        "rating": 4
+    },
+    {
+        "id": "fb_post_17",
+        "timestamp": "2026-04-08T18:11:18.229126",
+        "content": "Terrible update, latency is so high on the checkout page.",
+        "rating": 2
+    },
+    {
+        "id": "fb_post_13",
+        "timestamp": "2026-04-05T18:11:18.229089",
+        "content": "Terrible update, latency is so high on the checkout page.",
+        "rating": 1
+    },
+    {
+        "id": "fb_post_22",
+        "timestamp": "2026-04-05T18:11:18.229165",
+        "content": "Payment keeps hanging on the loading screen.",
+        "rating": 2
+    },
+    {
+        "id": "fb_post_11",
+        "timestamp": "2026-04-07T18:11:18.229078",
+        "content": "App crashed when I tried to pay!",
+        "rating": 1
+    },
+    {
+        "id": "fb_pre_11",
+        "timestamp": "2026-03-30T18:11:18.228885",
+        "content": "The new checkout is so slick.",
+        "rating": 5
+    },
+    {
+        "id": "fb_post_16",
+        "timestamp": "2026-04-05T18:11:18.229115",
+        "content": "Timeout error every time I try to confirm purchase.",
+        "rating": 2
+    },
+    {
+        "id": "fb_pre_10",
+        "timestamp": "2026-04-01T18:11:18.228879",
+        "content": "Smooth experience.",
+        "rating": 3
+    },
+    {
+        "id": "fb_pre_4",
+        "timestamp": "2026-04-02T18:11:18.228834",
+        "content": "Love the new design!",
+        "rating": 3
+    },
+    {
+        "id": "fb_post_20",
+        "timestamp": "2026-04-06T18:11:18.229151",
+        "content": "App crashed when I tried to pay!",
+        "rating": 1
+    },
+    {
+        "id": "fb_pre_14",
+        "timestamp": "2026-04-03T18:11:18.228908",
+        "content": "Nothing special, works fine.",
+        "rating": 3
+    },
+    {
+        "id": "fb_post_10",
+        "timestamp": "2026-04-05T18:11:18.229071",
+        "content": "It says my card failed but it worked yesterday.",
+        "rating": 1
+    }
+]

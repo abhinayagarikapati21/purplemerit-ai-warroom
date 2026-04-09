@@ -1,0 +1,14 @@
+# Release Notes: V2.0 Checkout Flow Revamp (Date: T-10 days)
+
+## Overview
+Rollout of the new dynamic checkout flow designed to reduce friction and improve conversion.
+
+## Changes
+- Replaced legacy payment gateway integration with async microservices.
+- Added animated UI transitions on checkout.
+- Migrated the frontend to new API v3 endpoints.
+
+## Known Risks
+- The new async microservices rely on a message queue that occasionally spikes in latency under heavy load.
+- Fallback payment routes were not fully load-tested.
+- UI animations may cause memory leaks on older devices, potentially leading to increased crash rates.
