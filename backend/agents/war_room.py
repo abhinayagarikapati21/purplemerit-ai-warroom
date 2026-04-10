@@ -16,7 +16,7 @@ load_dotenv()
 
 # We use Gemini for the agents
 # Make sure to set GEMINI_API_KEY in .env
-llm = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0.2)
+llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash", temperature=0.2)
 llm_strict = llm.with_structured_output(WarRoomDecision)
 
 def log_event(state: WarRoomState, message: str):

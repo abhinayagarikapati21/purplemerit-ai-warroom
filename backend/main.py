@@ -5,6 +5,13 @@ import json
 import asyncio
 
 from agents.war_room import war_room_app
+from agents.debugger_graph import debugger_app
+from pydantic import BaseModel
+
+class DebuggerInput(BaseModel):
+    bug_report: str
+    logs: str
+
 from tools.metrics import get_metrics_data
 from tools.sentiment import get_feedback_data
 
@@ -51,6 +58,37 @@ async def run_war_room():
             final_state = event
             if "final_output" in final_state and final_state["final_output"]:
                 yield f"data: {json.dumps({'type': 'final_decision', 'content': final_state['final_output']})}\n\n"
+                
+        except Exception as e:
+            yield f"data: {json.dumps({'type': 'error', 'content': str(e)})}\n\n"
+
+    return StreamingResponse(event_generator(), media_type="text/event-stream")
+
+@app.post("/api/debugger/run")
+async def run_debugger_workflow(payload: DebuggerInput):
+    """Run the auto-debugger LangGraph and stream the real-time execution traces and final result via SSE."""
+    
+    async def event_generator():
+        initial_state = {
+            "bug_report": payload.bug_report,
+            "logs": payload.logs,
+            "repro_attempts": 0,
+            "max_repro_attempts": 3,
+            "agent_traces": []
+        }
+        
+        try:
+            for event in debugger_app.stream(initial_state, stream_mode="values"):
+                if "agent_traces" in event and event["agent_traces"]:
+                    # Get the most recently appended trace
+                    latest_trace = event["agent_traces"][-1]
+                    yield f"data: {json.dumps({'type': 'log', 'content': latest_trace})}\n\n"
+                    
+                await asyncio.sleep(0.3)
+                
+            final_state = event
+            if "final_structured_output" in final_state and final_state["final_structured_output"]:
+                yield f"data: {json.dumps({'type': 'final_decision', 'content': final_state['final_structured_output']})}\n\n"
                 
         except Exception as e:
             yield f"data: {json.dumps({'type': 'error', 'content': str(e)})}\n\n"

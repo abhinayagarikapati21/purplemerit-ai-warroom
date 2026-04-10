@@ -3,179 +3,168 @@ import './App.css';
 
 function App() {
   const [hasEntered, setHasEntered] = useState(false);
-  const [logs, setLogs] = useState([]);
+  const [bugReport, setBugReport] = useState("Bug Title: App crashes when parsing JSON payload\nExpected: Returns 200 OK\nActual: 500 Internal Server Error.\nHints: Seems to happen only when `user_id` is passed as a string instead of an int.");
+  const [logs, setLogs] = useState("INFO [2026-04-09]: Server started\nINFO: Handling request\nERROR: Traceback (most recent call last):\n  File \"/app/main.py\", line 42, in process_data\n    result = internal_math(user_id)\n  File \"/app/math.py\", line 10, in internal_math\n    return user_id / 2\nTypeError: unsupported operand type(s) for /: 'str' and 'int'");
+  
+  const [traces, setTraces] = useState([]);
   const [isRunning, setIsRunning] = useState(false);
   const [finalDecision, setFinalDecision] = useState(null);
   
-  // Dynamic Data States
-  const [latestMetrics, setLatestMetrics] = useState(null);
-  const [recentFeedback, setRecentFeedback] = useState([]);
-  
-  const logsEndRef = useRef(null);
-
-  useEffect(() => {
-    if (!hasEntered) return;
-
-    // Fetch live dashboard data from the API on mount
-    const fetchDashboardData = async () => {
-      try {
-        const metRes = await fetch('http://localhost:8000/api/data/metrics');
-        const metData = await metRes.json();
-        if (metData && metData.length > 0) {
-          setLatestMetrics(metData[metData.length - 1]);
-        }
-
-        const fbRes = await fetch('http://localhost:8000/api/data/feedback');
-        const fbData = await fbRes.json();
-        if (fbData && fbData.length > 0) {
-          const negatives = fbData.filter(f => f.rating < 3).slice(0, 4);
-          setRecentFeedback(negatives);
-        }
-      } catch (err) {
-        console.error("Error fetching mock data:", err);
-      }
-    };
-    fetchDashboardData();
-  }, [hasEntered]);
+  const tracesEndRef = useRef(null);
 
   const scrollToBottom = () => {
-    logsEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    tracesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }
 
   useEffect(() => {
     scrollToBottom();
-  }, [logs]);
+  }, [traces]);
 
-  const runWarRoom = async () => {
+  const runDebugger = async () => {
     setIsRunning(true);
-    setLogs([]);
+    setTraces([]);
     setFinalDecision(null);
     
-    const eventSource = new EventSource('http://localhost:8000/api/war-room/run');
+    try {
+      const response = await fetch('http://localhost:8000/api/debugger/run', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bug_report: bugReport, logs: logs })
+      });
 
-    eventSource.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      if (data.type === 'log') {
-        setLogs(prev => [...prev, data.content]);
-      } else if (data.type === 'final_decision') {
-        setFinalDecision(data.content);
-        eventSource.close();
-        setIsRunning(false);
-      } else if (data.type === 'error') {
-        setLogs(prev => [...prev, `[ERROR] ${data.content}`]);
-        eventSource.close();
-        setIsRunning(false);
+      if (!response.body) throw new Error("No readable stream");
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder("utf-8");
+
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        
+        const chunk = decoder.decode(value, { stream: true });
+        // The chunk might contain multiple "data: {...}\n\n" lines
+        const lines = chunk.split('\n\n');
+        
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            try {
+              const dataStr = line.substring(6).trim();
+              if(!dataStr) continue;
+              const data = JSON.parse(dataStr);
+              
+              if (data.type === 'log') {
+                setTraces(prev => [...prev, data.content]);
+              } else if (data.type === 'final_decision') {
+                setFinalDecision(data.content);
+              } else if (data.type === 'error') {
+                setTraces(prev => [...prev, { agent: "SYSTEM ERROR", action: data.content }]);
+              }
+            } catch (e) {
+              console.error("Error parsing SSE JSON:", e, line);
+            }
+          }
+        }
       }
-    };
-
-    eventSource.onerror = () => {
-      eventSource.close();
+    } catch (err) {
+      console.error(err);
+      setTraces(prev => [...prev, { agent: "NETWORK", action: "Failed to connect to backend stream." }]);
+    } finally {
       setIsRunning(false);
-    };
+    }
   };
 
   if (!hasEntered) {
     return (
       <div className="landing-page">
         <div className="landing-card">
-          <h1 className="landing-title">PurpleMerit</h1>
-          <p className="landing-subtitle">Cross-Functional AI War Room Assessment</p>
+          <h1 className="landing-title">Auto-Debugger</h1>
+          <p className="landing-subtitle">Multi-Agent AI Triage & Patch Generation</p>
           <button className="btn-enter" onClick={() => setHasEntered(true)}>
-            Launch Agent Dashboard
+            Initialize Diagnostics
           </button>
         </div>
       </div>
     );
   }
 
-  // 2. Render Main Dashboard
   return (
     <div className="dashboard-container">
       <header className="header">
-        <h1>System Diagnostics</h1>
+        <h1>PurpleMerit Auto-Debugger Dashboard</h1>
         <div className="status-badge">
-          <div className="pulse"></div>
-          Production V2.0 
+          <div className={`pulse ${isRunning ? 'active' : ''}`}></div>
+          {isRunning ? 'Agents Executing...' : 'System Idle'}
         </div>
       </header>
 
       <div className="main-content">
         <div className="panel left-panel">
-          <h2 className="panel-title">
-            Live Telemetry <span className="live-indicator">ACTIVE</span>
-          </h2>
+          <h2 className="panel-title">Incident Inputs</h2>
           
-          <div className="metrics-grid">
-            <div className="metric-card">
-              <div className="metric-label">p95 API Latency</div>
-              <div className="metric-val trend-down">
-                {latestMetrics ? `${latestMetrics.p95_api_latency_ms.toFixed(1)}ms` : 'Loading...'}
-              </div>
-            </div>
-            <div className="metric-card">
-              <div className="metric-label">Payment Success</div>
-              <div className="metric-val trend-down">
-                {latestMetrics ? `${latestMetrics.payment_success_pct}%` : 'Loading...'}
-              </div>
-            </div>
-            <div className="metric-card">
-              <div className="metric-label">Crash Rate Vol.</div>
-              <div className="metric-val trend-down">
-                {latestMetrics ? `${latestMetrics.crash_rate_pct}%` : 'Loading...'}
-              </div>
-            </div>
-            <div className="metric-card">
-              <div className="metric-label">Overall DAU</div>
-              <div className="metric-val">
-                {latestMetrics ? latestMetrics.dau.toLocaleString() : 'Loading...'}
-              </div>
-            </div>
+          <div className="input-group">
+            <label>1. Bug Report & Symptoms</label>
+            <textarea 
+              value={bugReport}
+              onChange={(e) => setBugReport(e.target.value)}
+              placeholder="Paste user bug report here..."
+            />
           </div>
 
-          <div className="feedback-section">
-             <div className="metric-label" style={{marginBottom: '0.8rem'}}>Recent User Reports</div>
-             {recentFeedback.length > 0 ? recentFeedback.map((fb, idx) => (
-               <div key={idx} className="feedback-item">
-                 "{fb.content}"
-               </div>
-             )) : (
-               <div className="feedback-item">Loading feedback stream...</div>
-             )}
+          <div className="input-group">
+            <label>2. Raw System Logs</label>
+            <textarea 
+              value={logs}
+              onChange={(e) => setLogs(e.target.value)}
+              placeholder="Paste raw logs, stack traces, and system noise..."
+              className="log-input"
+            />
           </div>
 
           <button 
             className="btn-primary" 
-            onClick={runWarRoom} 
-            disabled={isRunning}>
-            {isRunning ? 'Deploying War Room Agents...' : 'Initialize AI War Room'}
+            onClick={runDebugger} 
+            disabled={isRunning || !bugReport || !logs}>
+            {isRunning ? 'Deploying Triage Agents...' : 'Start Execution Graph'}
           </button>
         </div>
 
         <div className="panel right-panel">
-          <h2 className="panel-title">Multi-Agent State & Decision Pipeline</h2>
+          <h2 className="panel-title">LangGraph Execution Traces</h2>
           
-          {finalDecision ? (
-             <div className="final-decision-box">
-                <h3 style={{margin: '0 0 1rem 0', fontWeight: '800'}}>Final Vector: 
-                  <span className={`decision-${finalDecision.decision.split(' ')[0]}`}> {finalDecision.decision}</span>
-                </h3>
-                <p style={{fontSize: '1rem', lineHeight: '1.6'}}>
-                  <strong>Rationale:</strong> {finalDecision.rationale}
-                </p>
-                <div className="json-view">
-                  {JSON.stringify(finalDecision, null, 2)}
+          <div className="trace-box">
+             {traces.length === 0 && <div className="placeholder-text">Awaiting input...</div>}
+             {traces.map((trace, idx) => (
+                <div key={idx} className={`trace-entry agent-${trace.agent.toLowerCase().replace(' ', '-')}`}>
+                  <span className="agent-badge">{trace.agent}</span>
+                  <span className="agent-action">{trace.action}</span>
                 </div>
+             ))}
+             <div ref={tracesEndRef} />
+          </div>
+
+          {finalDecision && (
+             <div className="final-decision-box fade-in">
+                <h3>Final Deliverable: Structured Intelligence</h3>
+                <div className="report-grid">
+                  <div className="report-item">
+                    <strong>Cause Hypothesis:</strong> {finalDecision.root_cause_hypothesis}
+                  </div>
+                  <div className="report-item">
+                    <strong>Severity:</strong> {finalDecision.bug_summary?.severity}
+                  </div>
+                </div>
+                
+                <h4>Generated Patch Plan</h4>
+                <div className="patch-plan">
+                  <p><strong>Approach:</strong> {finalDecision.patch_plan?.approach}</p>
+                  <p><strong>Risks:</strong> {finalDecision.patch_plan?.risks}</p>
+                </div>
+
+                <h4>Reproduction Script Used</h4>
+                <pre className="code-block">
+                  {finalDecision.repro_script}
+                </pre>
              </div>
-          ) : (
-            <div className="log-box">
-              {logs.length === 0 && <div style={{opacity: 0.5}}>Awaiting manual execution override...</div>}
-              {logs.map((log, idx) => (
-                <div key={idx} className="log-entry">
-                  {log}
-                </div>
-              ))}
-              <div ref={logsEndRef} />
-            </div>
           )}
         </div>
       </div>
